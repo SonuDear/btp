@@ -1,0 +1,46 @@
+{
+  "xsappname": "myapp",
+  "tenant-mode": "dedicated",
+  "scopes": [
+      {
+          "name": "$XSAPPNAME.Display",
+          "description": "Display Users"
+      },
+      {
+          "name": "$XSAPPNAME.Update",
+          "description": "Update Users"
+      }
+  ],
+  "role-templates": [
+      {
+          "name": "Viewer",
+          "description": "View Users",
+          "scope-references": [
+              "$XSAPPNAME.Display"
+          ]
+      },
+      {
+          "name": "Manager",
+          "description": "Maintain Users",
+          "scope-references": [
+              "$XSAPPNAME.Display",
+              "$XSAPPNAME.Update"
+          ]
+      }
+  ],
+  "role-collections": [
+      {
+          "name": "UserManagerRC",
+          "description": "User Manager Role Collection",
+          "role-template-references": [
+              "$XSAPPNAME.Viewer",
+              "$XSAPPNAME.Manager"
+          ]
+      }
+  ],
+  "oauth2-configuration": {
+      "redirect-uris": [
+          "https://*.cfapps.us10-001.hana.ondemand.com/**"
+      ]
+  }
+}
