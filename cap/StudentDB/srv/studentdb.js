@@ -10,6 +10,7 @@ function calcAge(dob){
     return age;
 }
 
+
 function calcDesc(code) {
     var gender_description;
     console.log(code);
