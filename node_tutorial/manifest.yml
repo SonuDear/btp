@@ -1,0 +1,28 @@
+---
+applications:
+- name: myapp
+  routes :
+  - route : https://5A6-myapp-brave-guanaco-yk.cfapps.us10-001.hana.ondemand.com
+  path: myapp
+  memory: 128M
+  buildpacks:
+  - nodejs_buildpack
+  services:
+  - nodeuaa
+- name: web
+  routes :
+  - route : https://5A6-web-optimistic-fossa-us.cfapps.us10-001.hana.ondemand.com
+  path: web
+  memory: 128M
+  env:
+    destinations: >
+      [
+        {
+          "name":"myapp",
+          "url":" https://5A6-myapp-brave-guanaco-yk.cfapps.us10-001.hana.ondemand.com",
+          "forwardAuthToken": true
+        }
+      ]
+  services:
+  - nodeuaa
+

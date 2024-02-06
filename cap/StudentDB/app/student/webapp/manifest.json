@@ -83,7 +83,6 @@
       "css": []
     },
     "routing": {
-      "config": {},
       "routes": [
         {
           "pattern": ":?query:",
@@ -103,12 +102,33 @@
           "name": "sap.fe.templates.ListReport",
           "options": {
             "settings": {
+              "initialLoad": "Enabled",
               "contextPath": "/Student",
               "variantManagement": "Page",
               "navigation": {
                 "Student": {
                   "detail": {
                     "route": "StudentObjectPage"
+                  }
+                }
+              },
+              "controlConfiguration": {
+                "@com.sap.vocabularies.UI.v1.LineItem": {
+                  "actions": {
+                    "StudentListExt": {
+                      "press": "student.ext.studentListExt.StudentListExt.SetAlumni",
+                      "visible": true,
+                      "enabled": true,
+                      "requiresSelection": true,
+                      "text": "Set Alumni"
+                    },
+                    "StudentListExt2": {
+                      "press": "student.ext.studentListExt.StudentListExt.SetStudent",
+                      "visible": true,
+                      "enabled": true,
+                      "requiresSelection": true,
+                      "text": "Set Student"
+                    }
                   }
                 }
               }
@@ -121,6 +141,7 @@
           "name": "sap.fe.templates.ObjectPage",
           "options": {
             "settings": {
+              "createMode": "inline",
               "editableHeaderContent": false,
               "contextPath": "/Student"
             }

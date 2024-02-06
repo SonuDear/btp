@@ -1,5 +1,4 @@
 const cds = require('@sap/cds');
-
 function calcAge(dob){
     var today = new Date();
     var birthDate = new Date(Date.parse(dob));    
@@ -26,10 +25,11 @@ function calcDesc(code) {
 
 module.exports = cds.service.impl(function () {
 
-    const { Student, Gender } = this.entities();
+    const { Student, Gender,Languages,Courses} = this.entities();
 
     this.on(['READ'], Student, async(req) => {
         results = await cds.run(req.query);
+      console.log(results);
         if(Array.isArray(results)){
             results.forEach(element => {
              element.age=calcAge(element.dob); 
@@ -70,7 +70,61 @@ module.exports = cds.service.impl(function () {
         req.error({'code': 'STPANNOEXISTS',message:'Student with such pan number already exists', target: 'pan_no'});
     }
 
+   const studentID = req.data;
+    const l_code = req.data.Languages;
+    console.log(studentID);
+    let errorReported = false;
 
+   /* l_code.forEach(elmt => {
+        const count = l_code.filter(each => elmt.lang_ID === each.lang_ID).length;
+        if (count > 1 && !errorReported) {
+            req.error({
+                'code': 'LANGEXISTS',
+                'message': 'Languages are repeated, Please Check!!'
+            });
+            errorReported = true; 
+        }
+    });*/
+    });
+
+    this.before(['CREATE','UPDATE'],Courses,async(req) => {
+        const data=req.data;
+        const books=req.data.Books;
+        console.log(data);
+        let errorReported = false;
+
+    books.forEach(elmt => {
+        const count = books.filter(each => elmt.book_ID === each.book_ID).length;
+        if (count > 1 && !errorReported) {
+            req.error({
+                'code': 'BOOKEXISTS',
+                'message': 'Course Books are repeated, Please Check!!'
+            });
+            errorReported = true; 
+        }
+    });
+    });
+
+    this.on(['READ'], Courses, async (req) => {
+        const res = await cds.run(req.query);
+        
+        if (!Array.isArray(res)) {
+            // If 'res' is not an array, handle it accordingly (e.g., log or throw an error)
+            console.error("Unexpected response format:", res);
+            return res;
+        }
+    
+        for (const course of res) {
+            // Fetch the count of students for each course
+            const numberOfStudents = await cds.run(
+                SELECT.from(Student).where({ course_ID: course.ID })
+            );
+            course.numberOfStudents = numberOfStudents.length;
+            const bookCount = course.Books.length;
+            course.BookCount = bookCount;
+        }
+    
+        return res;
     });
 
     this.on('READ', Gender, async(req) => {
